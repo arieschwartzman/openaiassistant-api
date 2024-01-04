@@ -75,13 +75,14 @@ app.post('/run', async (req: Request, res: Response) => {
     }
 });
 
-// Retrieve the run state  
+// Retrieve the run state.  
 app.get('/run', async (req: Request, res: Response) => {
     try {
-        const { thread_id, run_id } = req.body;
+        // Get thread_id and run_id from query params
+        const { thread_id, run_id } = req.query;
         const run = await openai.beta.threads.runs.retrieve(
-            thread_id,
-            run_id
+            thread_id as string, 
+            run_id as string
         );
         res.json(run);
     }  
@@ -93,8 +94,8 @@ app.get('/run', async (req: Request, res: Response) => {
 // List all messages in the thread
 app.get('/messages', async (req: Request, res: Response) => {
     try {
-        const { thread_id } = req.body;
-        const messages = await openai.beta.threads.messages.list(thread_id);
+        const { thread_id } = req.query;
+        const messages = await openai.beta.threads.messages.list(thread_id as string);
         res.json(messages.data);
     }
     catch (error: any) {

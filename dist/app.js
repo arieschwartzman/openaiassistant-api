@@ -75,10 +75,11 @@ app.post('/run', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(error.status).json(error.error);
     }
 }));
-// Retrieve the run state  
+// Retrieve the run state.  
 app.get('/run', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { thread_id, run_id } = req.body;
+        // Get thread_id and run_id from query params
+        const { thread_id, run_id } = req.query;
         const run = yield openai.beta.threads.runs.retrieve(thread_id, run_id);
         res.json(run);
     }
@@ -89,7 +90,7 @@ app.get('/run', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 // List all messages in the thread
 app.get('/messages', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { thread_id } = req.body;
+        const { thread_id } = req.query;
         const messages = yield openai.beta.threads.messages.list(thread_id);
         res.json(messages.data);
     }
@@ -97,6 +98,10 @@ app.get('/messages', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(error.status).json(error.error);
     }
 }));
+// Get the health of the server
+app.get('/health', (req, res) => {
+    res.send('OK');
+});
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
