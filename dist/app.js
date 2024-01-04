@@ -24,6 +24,8 @@ if (!apiKey) {
     console.error('OPENAI_API_KEY environment variable not found');
     process.exit(1);
 }
+// Get reducted open ai api key
+console.log(`OPEN_API_KEY: ${apiKey.substring(0, 7)}...`);
 // Initialize the OpenAI client library
 const openai = new openai_1.default({
     apiKey

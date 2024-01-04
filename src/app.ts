@@ -15,6 +15,11 @@ if (!apiKey) {
     process.exit(1);
 }
 
+
+// log reducted open ai api key
+console.log('OPENAI_API_KEY: ' + apiKey.substring(0, 5) + '...');
+
+
 // Initialize the OpenAI client library
 const openai = new OpenAI({
     apiKey
