@@ -63,6 +63,12 @@ curl -X POST http://localhost:3000/message \
 
 Create new run. Requires `assistant_id` and `thread_id`
 
+### Create new async run
+
+`POST /run_async`
+
+Create new async run. Requires `assistant_id` and `thread_id` and `retries`
+
 ### Get run status
 
 `GET /run`
