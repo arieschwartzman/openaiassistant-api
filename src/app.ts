@@ -16,7 +16,7 @@ if (!apiKey) {
 }
 
 
-// log reducted open ai api key
+// log redacted open ai api key
 console.log('OPENAI_API_KEY: ' + apiKey.substring(0, 5) + '...');
 
 
@@ -84,7 +84,7 @@ app.post('/run_async', async (req: Request, res: Response) => {
     try {
         const { thread_id, assistant_id, retries } = req.body;
         if (!retries || !thread_id || !assistant_id) {
-            return res.status(400).json({ error: 'thread_id, assitant_id, retries is required' });
+            return res.status(400).json({ error: 'thread_id, assistant_id, retries is required' });
         }
         let tries = 0;
         let succeeded = false;
