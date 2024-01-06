@@ -87,7 +87,7 @@ app.post('/run_async', async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'thread_id, assitant_id, retries is required' });
         }
         let tries = 0;
-        let suceeded = false;
+        let succeeded = false;
         let run; 
         const createRun = await openai.beta.threads.runs.create(thread_id, { assistant_id });
         do {
@@ -96,13 +96,13 @@ app.post('/run_async', async (req: Request, res: Response) => {
                 createRun.id as string
             );
             if (run.status === 'completed') { 
-                suceeded = true;
+                succeeded = true;
                 break;
             }    
             tries++;
             await new Promise(resolve => setTimeout(resolve, 3000));
         } while (tries < retries);
-        if (suceeded) {
+        if (succeeded) {
             res.json(run);
         } else {
             res.status(500).json({ error: 'Tries Exceeded' } );
