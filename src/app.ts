@@ -1,29 +1,50 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
+app.use(checkApiKey);
 
-const apiKey = process.env['OPENAI_API_KEY'];
+const openai_apiKey = process.env['OPENAI_API_KEY'];
+const apiKey = process.env['API_KEY'];
+
+if (!openai_apiKey) {
+    console.error('OPENAI_API_KEY environment variable not found');
+    process.exit(1);
+}
 
 if (!apiKey) {
-    console.error('OPENAI_API_KEY environment variable not found');
+    console.error('API_KEY environment variable not found');
     process.exit(1);
 }
 
 
 // log redacted open ai api key
-console.log('OPENAI_API_KEY: ' + apiKey.substring(0, 5) + '...');
+console.log('OPENAI_API_KEY: ' + openai_apiKey.substring(0, 5) + '...');
+console.log('API_KEY: ', apiKey.substring(0,5) + '...' );
 
 
 // Initialize the OpenAI client library
 const openai = new OpenAI({
-    apiKey
+    apiKey: openai_apiKey
 });
+
+function checkApiKey(req: Request, res: Response, next: NextFunction) {
+    const apiKey = req.headers['x-api-key'];
+    if (req.path === '/health') {
+        return next();
+    }
+
+    if (!apiKey || apiKey !== process.env.API_KEY) {
+        return res.status(401).json({ error: 'Invalid API key, check x-api-key header' });
+    }
+
+  next();
+}
 
 // Create new assistant
 app.post('/assistant', async (req: Request, res: Response) => {
@@ -143,10 +164,14 @@ app.get('/messages', async (req: Request, res: Response) => {
 
 // Get the health of the server
 app.get('/health', (req: Request, res: Response) => {
-    res.send('OK');
+    res.json(
+        {   status: 'healthy', 
+            openai_apiKey: openai_apiKey.substring(0,5) + '...',
+            apiKey: apiKey.substring(0, 5) + '...'            
+        });
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}. Run GET /health to check if service running correctly.`);
 });
   
