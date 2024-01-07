@@ -1,0 +1,12 @@
+# docker-compose.yml
+version: '3.7'
+services:
+  web:  
+    image: 'arieschwartzman/openaiassistant-api:latest'
+    restart: always
+    container_name: openaiassistant-api
+    environment:
+      OPENAI_API_KEY: ...
+      API_KEY: ...
+    ports:
+      - '3005:3000'
