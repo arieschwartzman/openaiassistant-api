@@ -49,11 +49,12 @@ function checkApiKey(req: Request, res: Response, next: NextFunction) {
 // Create new assistant
 app.post('/assistant', async (req: Request, res: Response) => {
     try {
-        const { name, instructions, model } = req.body;
+        const { name, instructions, model, tools } = req.body;
         const assistant = await openai.beta.assistants.create({
             name,
             instructions,
-            model
+            model,
+            tools
         });
         res.json(assistant);
     } catch (error: any) {
@@ -101,41 +102,22 @@ app.post('/run', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/run_async', async (req: Request, res: Response) => {
+app.post('/run/submit_tool_outputs', async (req: Request, res: Response) => {
     try {
-        const { thread_id, assistant_id, retries } = req.body;
-        if (!retries || !thread_id || !assistant_id) {
-            return res.status(400).json({ error: 'thread_id, assistant_id, retries is required' });
-        }
-        let tries = 0;
-        let succeeded = false;
-        let run; 
-        const createRun = await openai.beta.threads.runs.create(thread_id, { assistant_id });
-        do {
-            run = await openai.beta.threads.runs.retrieve(
-                thread_id as string, 
-                createRun.id as string
-            );
-            if (run.status === 'completed') { 
-                succeeded = true;
-                break;
-            }    
-            tries++;
-            await new Promise(resolve => setTimeout(resolve, 3000));
-        } while (tries < retries);
-        if (succeeded) {
-            res.json(run);
-        } else {
-            res.status(500).json({ error: 'Tries Exceeded' } );
-        }    
-    }
-    catch (error: any) {
+        const { thread_id, run_id, outputs } = req.body;
+        const run = await openai.beta.threads.runs.submitToolOutputs(
+            thread_id,
+            run_id,
+            { tool_outputs: outputs }
+        );
+        res.json(run);
+    } catch (error: any) {
         res.status(error.status).json(error.error);
     }
 });
 
 // Retrieve the run state.  
-app.get('/run', async (req: Request, res: Response) => {
+app.get('/run/status', async (req: Request, res: Response) => {
     try {
         // Get thread_id and run_id from query params
         const { thread_id, run_id } = req.query;
