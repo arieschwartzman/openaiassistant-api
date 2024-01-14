@@ -18,12 +18,11 @@ jobs:
       id: datetime
 
     - name: Replace string
-      uses: thiagodnf/string-replacer@v1.0.2
+      uses: MathieuSoysal/replace-string-in-file@v1.0.0
       with:
-        find: "VERSION_PLACEHOLDER"
-        replace: ${{ steps.datetime.outputs.datetime_str }}
-        include: |
-            src/app.ts
+        file: src/app.ts
+        old-string: "VERSION_PLACEHOLDER"
+        new-string: ${{ steps.datetime.outputs.datetime_str }}
 
     - uses: actions/checkout@v3
     - name: Login to Docker Hub
