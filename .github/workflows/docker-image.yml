@@ -23,6 +23,8 @@ jobs:
     - name: Get Datetime
       uses: ccccmagicboy/get_datetime@master
       id: datetime
+      with:
+        tz1: 'Asia/Jerusalem'
 
     - name: Replace string
       uses: MathieuSoysal/replace-string-in-file@v1.0.0
