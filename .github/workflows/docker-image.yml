@@ -24,7 +24,8 @@ jobs:
       uses: ccccmagicboy/get_datetime@master
       id: datetime
       with:
-        tz1: 'Asia/Jerusalem'
+        tz1: 'Asia'
+        tz2: 'Jerusalem'
 
     - name: Replace string
       uses: MathieuSoysal/replace-string-in-file@v1.0.0
