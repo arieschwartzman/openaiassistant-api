@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
     - name: Get Datetime
       uses: ccccmagicboy/get_datetime@master
       id: datetime
@@ -24,12 +31,6 @@ jobs:
         old-string: "VERSION_PLACEHOLDER"
         new-string: ${{ steps.datetime.outputs.datetime_str }}
 
-    - uses: actions/checkout@v3
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
