@@ -88,11 +88,12 @@ app.post('/message', async (req: Request, res: Response) => {
 // Run the assistant with the thread
 app.post('/run', async (req: Request, res: Response) => {
     try {
-        const { thread_id, assistant_id } = req.body;
+        const { thread_id, assistant_id, instructions } = req.body;
         const run = await openai.beta.threads.runs.create(
             thread_id,
             { 
-              assistant_id
+              assistant_id,
+              instructions
             }
           );
         res.json(run);

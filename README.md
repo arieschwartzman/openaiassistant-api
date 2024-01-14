@@ -61,19 +61,30 @@ curl -X POST http://localhost:3000/message \
 
 `POST /run`
 
-Create new run. Requires `assistant_id` and `thread_id`
-
-### Create new async run
-
-`POST /run_async`
-
-Create new async run. Requires `assistant_id` and `thread_id` and `retries`
+Create new run. Requires `assistant_id`, `thread_id` and optionaly `instructions`
 
 ### Get run status
 
 `GET /run`
 
 Retrieve a run from a thread. Requires `thread_id` and `run_id` in the request body.
+
+### Submit Tool Outputs
+
+This endpoint allows you to submit tool outputs for a specific thread run.
+
+`POST /run/submit_tool_outputs`
+
+The request body should include the following parameters:
+
+- `thread_id` (string): The ID of the thread.
+- `run_id` (string): The ID of the run.
+- `outputs` (object): The tool outputs to be submitted.
+
+### Response
+
+The response will contain the submitted run object.
+
 
 ### List all Messages in a Thread
 
