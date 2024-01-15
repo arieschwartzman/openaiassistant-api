@@ -149,7 +149,7 @@ app.get('/messages', async (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
     res.json(
         {   status: 'healthy', 
-            version: 'VERSION_PLACEHOLDER',
+            build: 'BUILD_PLACEHOLDER',
             openai_apiKey: openai_apiKey.substring(0,5) + '...',
             apiKey: apiKey.substring(0, 5) + '...'            
         });

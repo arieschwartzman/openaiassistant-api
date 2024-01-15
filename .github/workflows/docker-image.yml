@@ -20,18 +20,17 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Get Datetime
-      uses: ccccmagicboy/get_datetime@master
+      uses: Kaven-Universe/github-action-current-date-time@v1
       id: datetime
       with:
-        tz1: 'Asia'
-        tz2: 'Jerusalem'
+        format: "YYYY_MM_DD HH_mm_ss_SSS"        
 
     - name: Replace string
       uses: MathieuSoysal/replace-string-in-file@v1.0.0
       with:
         file: src/app.ts
-        old-string: "VERSION_PLACEHOLDER"
-        new-string: ${{ steps.datetime.outputs.datetime_str }}
+        old-string: "BUILD_PLACEHOLDER"
+        new-string: ${{ steps.datetime.outputs.time }}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
